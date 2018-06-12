@@ -25,6 +25,7 @@ module SendGridActionMailer
         m.subject = mail.subject
         # https://sendgrid.com/docs/Classroom/Send/v3_Mail_Send/personalizations.html
         m.add_personalization(to_personalizations(mail))
+        
       end
 
       add_content(sendgrid_mail, mail)
@@ -57,6 +58,12 @@ module SendGridActionMailer
         mail.to.each { |to| p.add_to(to_email(to)) }
         mail.cc.each { |cc| p.add_cc(to_email(cc)) } unless mail.cc.nil?
         mail.bcc.each { |bcc| p.add_bcc(to_email(bcc)) } unless mail.bcc.nil?
+
+        if mail[:substitutions]
+          mail[:substitutions].instance_variable_get(:@unparsed_value).each do |key, value|
+            p.add_substitution(Substitution.new(key: key, value: value)) if value
+          end
+        end
       end
     end
 
@@ -82,6 +89,12 @@ module SendGridActionMailer
     end
 
     def add_content(sendgrid_mail, mail)
+      if mail[:template_id]
+        sendgrid_mail.template_id = mail[:template_id].default
+        sendgrid_mail.add_content(to_content(:plain, '*'))
+        return
+      end
+
       case mail.mime_type
       when 'text/plain'
         sendgrid_mail.add_content(to_content(:plain, mail.body.decoded))

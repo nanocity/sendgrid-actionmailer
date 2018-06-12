@@ -145,13 +145,14 @@ module SendGridActionMailer
           mailer.deliver!(mail)
           expect(client.sent_mail['content']).to eq([
             {
+              'type' => 'text/plain',
+              'value' => 'I heard you like pineapple.'
+            },
+            {
               'type' => 'text/html',
               'value' => 'I heard you like <b>pineapple</b>.'
             },
-            {
-              'type' => 'text/plain',
-              'value' => 'I heard you like pineapple.'
-            }
+
           ])
         end
       end
@@ -176,12 +177,12 @@ module SendGridActionMailer
           mailer.deliver!(mail)
           expect(client.sent_mail['content']).to eq([
             {
-              'type' => 'text/html',
-              'value' => 'I heard you like <b>pineapple</b>.'
-            },
-            {
               'type' => 'text/plain',
               'value' => 'I heard you like pineapple.'
+            },
+            {
+              'type' => 'text/html',
+              'value' => 'I heard you like <b>pineapple</b>.'
             }
           ])
         end
@@ -215,12 +216,12 @@ module SendGridActionMailer
           mailer.deliver!(mail)
           expect(client.sent_mail['content']).to eq([
             {
-              'type' => 'text/html',
-              'value' => 'I heard you like <b>pineapple</b>.'
-            },
-            {
               'type' => 'text/plain',
               'value' => 'I heard you like pineapple.'
+            },
+            {
+              'type' => 'text/html',
+              'value' => 'I heard you like <b>pineapple</b>.'
             }
           ])
         end
