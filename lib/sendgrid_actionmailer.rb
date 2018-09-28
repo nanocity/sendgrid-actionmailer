@@ -60,7 +60,7 @@ module SendGridActionMailer
         mail.bcc.each { |bcc| p.add_bcc(to_email(bcc)) } unless mail.bcc.nil?
 
         if mail[:substitutions]
-          mail[:substitutions].instance_variable_get(:@unparsed_value).each do |key, value|
+          (mail[:substitutions].instance_variable_get(:@unparsed_value) || []).each do |key, value|
             p.add_substitution(Substitution.new(key: key, value: value)) if value
           end
         end
