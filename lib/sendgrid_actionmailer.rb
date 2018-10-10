@@ -61,7 +61,7 @@ module SendGridActionMailer
 
         if mail[:substitutions]
           (mail[:substitutions].instance_variable_get(:@unparsed_value) || []).each do |key, value|
-            p.add_substitution(Substitution.new(key: key, value: value)) if value
+            p.add_substitution(Substitution.new(key: key, value: value.to_s)) if value
           end
         end
       end
